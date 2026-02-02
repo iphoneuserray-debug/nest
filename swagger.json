@@ -1,0 +1,724 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/users": {
+            "get": {
+                "operationId": "UsersController_findAll",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "List of all users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CreateUserDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            }
+        },
+        "/users/{id}": {
+            "put": {
+                "operationId": "UsersController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUserDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Creates or updates and returns success indicator"
+                    },
+                    "400": {
+                        "description": "Invalid user payload"
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            },
+            "delete": {
+                "operationId": "UsersController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted (false if not found)"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            }
+        },
+        "/companies": {
+            "get": {
+                "operationId": "CompaniesController_findByFilter",
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "required": false,
+                        "in": "query",
+                        "description": "URL-encoded JSON filter object",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Companies matching filter",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CreateCompanyDto"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No companies matched the filter"
+                    },
+                    "400": {
+                        "description": "Invalid filter format"
+                    },
+                    "500": {
+                        "description": "Unexpected error"
+                    }
+                },
+                "tags": [
+                    "companies"
+                ]
+            }
+        },
+        "/companies/{id}": {
+            "put": {
+                "operationId": "CompaniesController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCompanyDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns the updated company object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateCompanyDto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body or parameters"
+                    }
+                },
+                "tags": [
+                    "companies"
+                ]
+            },
+            "delete": {
+                "operationId": "CompaniesController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Company deleted successfully"
+                    },
+                    "404": {
+                        "description": "Company with given id was not found"
+                    }
+                },
+                "tags": [
+                    "companies"
+                ]
+            }
+        },
+        "/companies/widgets": {
+            "get": {
+                "operationId": "CompaniesController_datacard",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Returns widgets data (doughnut, line, datacard)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "companies"
+                ]
+            }
+        },
+        "/companies/panel": {
+            "get": {
+                "operationId": "CompaniesController_panel",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Returns panel options (levels, countries, cities, ranges)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "companies"
+                ]
+            }
+        },
+        "/companies/level": {
+            "get": {
+                "operationId": "CompaniesController_level",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Returns number of company levels",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "companies"
+                ]
+            }
+        },
+        "/relations": {
+            "get": {
+                "operationId": "RelationsController_findRelationTree",
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "required": false,
+                        "in": "query",
+                        "description": "URL-encoded JSON filter object to restrict companies",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tree of relations for matched companies",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No relations available for the provided filter"
+                    },
+                    "400": {
+                        "description": "Invalid filter JSON"
+                    }
+                },
+                "tags": [
+                    "relations"
+                ]
+            }
+        },
+        "/relations/{id}": {
+            "put": {
+                "operationId": "RelationsController_update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRelationDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Relation updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid relation payload"
+                    }
+                },
+                "tags": [
+                    "relations"
+                ]
+            },
+            "delete": {
+                "operationId": "RelationsController_delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Relation deleted"
+                    },
+                    "404": {
+                        "description": "Relation not found"
+                    }
+                },
+                "tags": [
+                    "relations"
+                ]
+            }
+        },
+        "/accounts": {
+            "post": {
+                "operationId": "AccountsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAccountDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Account created successfully and returned"
+                    },
+                    "400": {
+                        "description": "Invalid account payload or account exist"
+                    }
+                },
+                "tags": [
+                    "accounts"
+                ]
+            },
+            "get": {
+                "operationId": "AccountsController_findAll",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "List of all accounts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CreateAccountDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "accounts"
+                ]
+            }
+        },
+        "/accounts/{email}": {
+            "get": {
+                "operationId": "AccountsController_findOne",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the account with given id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateAccountDto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found"
+                    }
+                },
+                "tags": [
+                    "accounts"
+                ]
+            },
+            "patch": {
+                "operationId": "AccountsController_update",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAccountDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Account updated and returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateAccountDto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid update payload"
+                    },
+                    "404": {
+                        "description": "Account not found"
+                    }
+                },
+                "tags": [
+                    "accounts"
+                ]
+            },
+            "delete": {
+                "operationId": "AccountsController_remove",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account deleted successfully"
+                    },
+                    "404": {
+                        "description": "Account not found"
+                    }
+                },
+                "tags": [
+                    "accounts"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Example",
+        "description": "The cats API description",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "CreateUserDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "role type",
+                        "enum": [
+                            "Admin",
+                            "Manager",
+                            "User"
+                        ]
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "age",
+                    "email",
+                    "role",
+                    "status"
+                ]
+            },
+            "CreateCompanyDto": {
+                "type": "object",
+                "properties": {
+                    "company_name": {
+                        "type": "string",
+                        "example": "Acme Corporation"
+                    },
+                    "level": {
+                        "type": "number",
+                        "example": 2,
+                        "description": "Hierarchy level of the company"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "USA"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "San Francisco"
+                    },
+                    "founded_year": {
+                        "type": "number",
+                        "example": 1999
+                    },
+                    "annual_revenue": {
+                        "type": "number",
+                        "example": 1200000
+                    },
+                    "employees": {
+                        "type": "number",
+                        "example": 250
+                    }
+                },
+                "required": [
+                    "company_name",
+                    "level",
+                    "country",
+                    "city",
+                    "founded_year",
+                    "annual_revenue",
+                    "employees"
+                ]
+            },
+            "CreateRelationDto": {
+                "type": "object",
+                "properties": {
+                    "company_code": {
+                        "type": "string",
+                        "example": "C123"
+                    },
+                    "parent_company": {
+                        "type": "string",
+                        "example": "C1234"
+                    }
+                },
+                "required": [
+                    "company_code",
+                    "parent_company"
+                ]
+            },
+            "CreateAccountDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Alice"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "alice@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "s3cr3t",
+                        "format": "password"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1-555-5555"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "postcode": {
+                        "type": "string"
+                    },
+                    "about": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "Admin",
+                            "Manager",
+                            "User"
+                        ],
+                        "example": "User"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "UpdateAccountDto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Alice"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "alice@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "s3cr3t",
+                        "format": "password"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1-555-5555"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "postcode": {
+                        "type": "string"
+                    },
+                    "about": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "Admin",
+                            "Manager",
+                            "User"
+                        ],
+                        "example": "User"
+                    }
+                }
+            }
+        }
+    }
+}
