@@ -1,4 +1,4 @@
-import { Company } from './interfaces/company.interface';
+import { Company } from './entity/company.entity';
 import { Stats } from './interfaces/stats.interface';
 
 // Compute statistics from an array of companies (replaces `updateStats`)

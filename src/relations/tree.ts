@@ -1,4 +1,4 @@
-import { Relation } from "./interfaces/relation.interface";
+import { Relation } from "./entity/relation.entity";
 
 export type TreeNode = {
     id: string;
@@ -7,24 +7,24 @@ export type TreeNode = {
 }
 
 export function buildTree(rows: Relation[]): TreeNode {
-    let relation = { id: "", parentId: "", children: [] };
-    const childrenWithoutParent: TreeNode[] = [];
+    const relation = { id: "", parentId: "", children: [] };
+    const nodes: TreeNode[] = [];
     for (const row of rows) {
         // Search by parent company code
         const foundPerentNode = find(row.parent_company, relation);
         const newChild = { id: row.company_code, parentId: row.parent_company, children: [] };
 
         if (row.parent_company === "") {
-            relation = newChild;
+            addChild(newChild, relation);
         }
-
-        // Find if exist parent in childrenWithoutParent array
-        if (foundPerentNode) {
+        // Find if exist parent in nodes array
+        else if (foundPerentNode) {
             addChild(newChild, foundPerentNode);
-        } else {
+        }
+        else {
             let foundParent = false;
-            for (const child of childrenWithoutParent) {
-                const found = find(row.parent_company, child)
+            for (const node of nodes) {
+                const found = find(row.parent_company, node)
                 if (found) {
                     addChild(newChild, found);
                     foundParent = true;
@@ -32,17 +32,17 @@ export function buildTree(rows: Relation[]): TreeNode {
 
             }
             // Assert Children into parent Node
-            if (!foundParent) childrenWithoutParent.push(newChild);
+            if (!foundParent) nodes.push(newChild);
         }
 
         // Find all children node
-        for (const child of childrenWithoutParent) {
+        for (const child of nodes) {
             if (child.parentId === row.company_code) {
                 addChild(child, newChild);
             }
         }
     }
-    for (const branch of childrenWithoutParent) {
+    for (const branch of nodes) {
         addChild(branch, relation)
     }
     return relation;

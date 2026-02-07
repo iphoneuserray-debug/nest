@@ -1,5 +1,5 @@
-import type { Company } from './interfaces/company.interface';
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Put, Query, BadRequestException, HttpException } from '@nestjs/common';
+import type { Company } from './entity/company.entity';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Put, Query, BadRequestException, HttpException } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { Widgets } from './interfaces/widgets.interface';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -27,28 +27,26 @@ export class CompaniesController {
             }
         }
 
-        const result = filterObj ? await this.companiesService.findByFilter(filterObj) : this.companiesService.findAll();
+        const result = await this.companiesService.findByFilter(filterObj ?? {});
         if (!result || result.length === 0) {
             throw new HttpException('No content', HttpStatus.NO_CONTENT);
         }
         return result;
     }
 
-    @Put(':id')
+    @Put()
     @ApiOkResponse({ description: 'Returns the updated company object', type: CreateCompanyDto })
     @ApiBadRequestResponse({ description: 'Invalid request body or parameters' })
-    async update(@Param('id') id: string, @Body() createCompanyDto: CreateCompanyDto) {
-        const company = { company_code: id, ...createCompanyDto } as Company;
-        return await this.companiesService.update(id, company);
+    async update(@Body() createCompanyDto: CreateCompanyDto) {
+        if (!createCompanyDto) throw new BadRequestException();
+        return await this.companiesService.update(createCompanyDto);
     }
 
     @Delete(':id')
     @ApiOkResponse({ description: 'Company deleted successfully' })
     @ApiNotFoundResponse({ description: 'Company with given id was not found' })
     async delete(@Param('id') id: string) {
-        const result = await this.companiesService.delete(id);
-        if (!result) throw new NotFoundException('Company not found');
-        return { deleted: true };
+        await this.companiesService.delete(id);
     }
 
     @Get('/widgets')
@@ -65,7 +63,7 @@ export class CompaniesController {
 
     @Get('/level')
     @ApiOkResponse({ description: 'Returns number of company levels', type: Number })
-    level(): number {
-        return this.companiesService.getLevel();
+    async level(): Promise<number> {
+        return await this.companiesService.getLevel();
     }
 }

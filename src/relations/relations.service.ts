@@ -1,64 +1,47 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Relation } from './interfaces/relation.interface';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { Relation } from './entity/relation.entity';
 import { CreateRelationDto } from './dto/create-relation.dto';
-import fs from 'fs';
-import csvParser from 'csv-parser';
-
 import { CompaniesService } from 'src/companies/companies.service';
 import { TreeNode, buildTree } from './tree';
 import { CreateFilterDto } from 'src/companies/dto/create-filter.dto';
 
 @Injectable()
-export class RelationsService implements OnModuleInit {
-    private relations: Relation[] = [];
-    constructor(private readonly companiesService: CompaniesService) { }
+export class RelationsService {
+    constructor(
+        private readonly companiesService: CompaniesService,
+        @InjectRepository(Relation)
+        private readonly relationsRepository: Repository<Relation>,
+    ) { }
 
-    async onModuleInit(): Promise<void> {
-        const data: Relation[] = [];
-        const filePath = 'test/resources/relationships_1217.csv';
-        await new Promise<void>((resolve, reject) => {
-            fs.createReadStream(filePath)
-                .pipe(csvParser())
-                .on('data', (row: any) => {
-                    data.push({
-                        company_code: row.company_code,
-                        parent_company: row.parent_company || ''
-                    });
-                })
-                .on('end', () => resolve())
-                .on('error', (err: Error) => reject(err));
+    async findAll(): Promise<Relation[]> {
+        return this.relationsRepository.find();
+    }
+
+    async findTreeByFilter(filter?: CreateFilterDto): Promise<TreeNode> {
+        const companies = await this.companiesService.findByFilter(filter ?? {});
+        const codes = companies.map((c) => c.company_code);
+        if (!codes.length) return buildTree([]);
+        const relations = await this.relationsRepository.find({
+            where: { company_code: In(codes) },
         });
-        this.relations = data;
-    }
-
-    findAll(): Relation[] {
-        return this.relations;
-    }
-
-    findTreeByFilter(filter?: CreateFilterDto): TreeNode {
-        const companies = filter ? this.companiesService.findByFilter(filter) : this.companiesService.findAll();
-        const codes = new Set(companies.map((c) => c.company_code));
-        const filteredRelations = this.relations.filter(
-            (r) => codes.has(r.company_code)
-        );
-        const result = buildTree(filteredRelations);
+        const result = buildTree(relations);
         return result;
     }
 
-    update(id: string, updatedRelation: CreateRelationDto) {
-        const index = this.relations.findIndex((r) => r.company_code === id);
-        if (index === -1) {
-            const newRel = { ...updatedRelation } as Relation;
-            this.relations.push(newRel);
-        } else {
-            this.relations[index] = updatedRelation as Relation;
+    async update(payload: CreateRelationDto): Promise<Relation> {
+        const existing = await this.relationsRepository.findOneBy({ company_code: payload.company_code });
+        if (!existing) {
+            const created = this.relationsRepository.create(payload as Relation);
+            return this.relationsRepository.save(created);
         }
+        const merged = this.relationsRepository.merge(existing, payload as Relation);
+        return this.relationsRepository.save(merged);
     }
 
-    delete(id: string): boolean {
-        const index = this.relations.findIndex((r) => r.company_code === id);
-        if (index === -1) return false;
-        this.relations.splice(index, 1);
-        return true;
+    async delete(id: string): Promise<void> {
+        const affected = (await this.relationsRepository.delete({ company_code: id })).affected;
+        if (affected === 0) throw new NotFoundException;
     }
 }

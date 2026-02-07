@@ -1,31 +1,45 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { User } from './entity/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { mockUsers } from '../../test/resources/users.fixture';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-    private readonly users: User[] = mockUsers;
+    constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) { }
 
-    findAll(): User[] {
-        return this.users;
+    findAll(): Promise<User[]> {
+        return this.usersRepository.find();
     }
 
-    update(id: string, updatedUser: CreateUserDto): User {
-        const index = this.users.findIndex((u) => u.id === id);
-        if (index === -1) {
-            const newUser = { ...updatedUser };
-            this.users.push(newUser);
-            return newUser;
-        } else {
-            this.users[index] = updatedUser;
-            return this.users[index];
+    async findByEmail(email: string): Promise<User | null> {
+        return await this.usersRepository.findOne({ where: { email } });
+    }
+
+    async update(createUser: CreateUserDto): Promise<User> {
+        const existing = await this.usersRepository.findOneBy({ id: createUser.id });
+        if (existing && existing.email !== createUser.email) {
+            throw new BadRequestException('Email cannot be updated');
         }
+        return await this.usersRepository.save(createUser as User);
     }
 
-    delete(id: string) {
-        const index = this.users.findIndex((u) => u.id === id);
-        if (index === -1) throw new NotFoundException('User not found');
-        this.users.splice(index, 1);
+    async updateByEmail(email: string, updateUserDto: UpdateUserDto): Promise<UpdateUserDto> {
+        if (updateUserDto.email && updateUserDto.email !== email) {
+            throw new BadRequestException('Email cannot be updated');
+        }
+        const user = await this.usersRepository.findOneBy({ email: email });
+        if (!user) throw new NotFoundException;
+        const merged = this.usersRepository.merge(user, updateUserDto);
+        return await this.usersRepository.save(merged);
+    }
+
+    async remove(id: string): Promise<void> {
+        const affected = (await this.usersRepository.delete(id)).affected;
+        if (affected === 0) throw new NotFoundException;
     }
 }

@@ -27,7 +27,9 @@ export class AccountsController {
     @ApiOkResponse({ description: 'Returns the account with given id', type: CreateAccountDto })
     @ApiNotFoundResponse({ description: 'Account not found' })
     findOne(@Param('email') email: string) {
-        return this.service.findOne(email);
+        const account = this.service.findOne(email);
+        if (!account) throw new NotFoundException;
+        return account;
     }
 
     @Patch(':email')
@@ -36,19 +38,13 @@ export class AccountsController {
     @ApiBadRequestResponse({ description: 'Invalid update payload' })
     update(@Param('email') email: string, @Body() dto: UpdateAccountDto) {
         if (!dto) throw new BadRequestException();
-        // email is immutable and cannot be changed
-        const existing = this.service.findOne(email);
-        if ((dto as any).email && (dto as any).email !== existing.email) {
-            throw new BadRequestException('Email cannot be changed');
-        }
-        return this.service.update(email, dto as any);
+        return this.service.update(email, dto);
     }
 
     @Delete(':email')
     @ApiOkResponse({ description: 'Account deleted successfully' })
     @ApiNotFoundResponse({ description: 'Account not found' })
-    remove(@Param('email') email: string) {
-        this.service.remove(email);
-        return { deleted: true };
+    async remove(@Param('email') email: string) {
+        await this.service.remove(email);
     }
 }

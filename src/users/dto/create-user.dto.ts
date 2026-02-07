@@ -23,7 +23,7 @@ export class CreateUserDto {
     @IsEnum(['Admin', 'Manager', 'User'])
     role: 'Admin' | 'Manager' | 'User';
 
-    @ApiProperty({ type: String })
-    @IsString()
-    status: string;
+    @ApiProperty({ description: 'status type', enum: ['Online', 'Offline'] })
+    @IsEnum(['Online', 'Offline'])
+    status: 'Online' | 'Offline';
 }

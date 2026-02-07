@@ -1,103 +1,81 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Account } from './interfaces/account.interface';
+import { Account } from './entity/account.entity';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/entity/user.entity';
 import { randomUUID } from 'crypto';
-import { UsersService } from '../users/users.service';
-import { FindAccount } from './interfaces/find-account.interface';
 
 @Injectable()
 export class AccountsService {
-    private accounts: Account[] = [];
+    constructor(
+        @InjectRepository(Account)
+        private accountsRepository: Repository<Account>,
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) { }
 
-    constructor(private readonly usersService: UsersService) { }
+    async create(dto: CreateAccountDto) {
+        const exists = await this.accountsRepository.findOneBy({ email: dto.email });
+        if (exists) throw new BadRequestException('Account already exists');
 
-    create(dto: CreateAccountDto): Account {
-        const idx = this.accounts.findIndex((a) => a.email === dto.email);
-        if (idx !== -1) throw new BadRequestException();
-
-        // create account record
-        const { email, password, name, phone, address, state, city, postcode, about, country, role } = dto;
-        const account: Account = {
-            email, password, phone, address, state, city, postcode, about, country,
-        };
-
-        // create corresponding user record if not exists (matched by email)
-        try {
-            const users = this.usersService.findAll();
-            const exists = users.find((u) => u.email === account.email);
-            if (!exists) {
-                const newUser = {
-                    id: randomUUID(),
-                    name: name ?? '',
-                    age: 0,
-                    email: account.email,
-                    role: role ?? 'User',
-                    status: 'active',
-                } as any;
-                // UsersService.update acts as create-or-update
-                this.usersService.update(newUser.id, newUser);
-            }
-        } catch {
-        }
-
-        this.accounts.push(account);
-        return account;
-    }
-
-    findAll(): Account[] {
-        return this.accounts;
-    }
-
-    findOne(email: string): FindAccount {
-        const acc = this.accounts.find((a) => a.email === email);
-        if (!acc) throw new NotFoundException('Account not found');
-
-        const users = this.usersService.findAll();
-        const user = users.find((u) => u.email === email);
+        let user = await this.usersRepository.findOne({ where: { email: dto.email } });
         if (!user) {
-            const newUser = {
+            user = this.usersRepository.create({
                 id: randomUUID(),
                 name: '',
                 age: 0,
-                email: email,
+                email: dto.email,
                 role: 'User',
-                status: 'active',
-            } as any;
-            // UsersService.update acts as create-or-update
-            this.usersService.update(newUser.id, newUser);
-            return { ...acc, name: newUser.name, role: newUser.role } as FindAccount;
+                status: 'Online'
+            } as User);
+            user = await this.usersRepository.save(user);
         }
-        return { ...acc, name: user.name, role: user.role } as FindAccount;
 
+        const account = this.accountsRepository.create({
+            email: dto.email,
+            password: dto.password,
+            phone: dto.phone,
+            address: dto.address,
+            state: dto.state,
+            city: dto.city,
+            postcode: dto.postcode,
+            about: dto.about,
+            country: dto.country,
+            user,
+        } as Account);
+
+        return await this.accountsRepository.save(account);
     }
 
-    update(email: string, dto: UpdateAccountDto): FindAccount {
-        const idx = this.accounts.findIndex((a) => a.email === email);
-        if (idx === -1) throw new NotFoundException('Account not found');
-        this.accounts[idx] = { ...this.accounts[idx], ...dto } as Account;
-        if (dto.name || dto.role) {
-            const users = this.usersService.findAll();
-            const user = users.find((u) => u.email === email);
-            if (!user) {
-                const newUser = {
-                    id: randomUUID(),
-                    name: dto.name ?? '',
-                    age: 0,
-                    email: email,
-                    role: dto.role ?? 'User',
-                    status: 'active',
-                }
-                this.usersService.update(newUser.id, newUser)
-            } else
-                this.usersService.update(user.id, { ...user, role: dto.role ?? user.role, name: dto.name ?? user.name })
-        }
-        return { ...this.accounts[idx], role: dto.role, name: dto.name } as FindAccount;
+    findAll(): Promise<Account[]> {
+        return this.accountsRepository.find();
     }
 
-    remove(email: string): void {
-        const idx = this.accounts.findIndex((a) => a.email === email);
-        if (idx === -1) throw new NotFoundException('Account not found');
-        this.accounts.splice(idx, 1);
+    async findOne(email: string): Promise<Account> {
+        const account = await this.accountsRepository.findOneBy({ email: email });
+        if (!account) throw new NotFoundException;
+        return account;
+    }
+
+    async update(email: string, dto: UpdateAccountDto): Promise<UpdateAccountDto> {
+        if (dto.email && dto.email !== email) {
+            throw new BadRequestException('Email cannot be updated');
+        }
+        const account = await this.accountsRepository.findOneBy({ email });
+        if (!account) throw new NotFoundException();
+
+        const merged = this.accountsRepository.merge(account, dto as any);
+        const saved = await this.accountsRepository.save(merged);
+
+        const result: UpdateAccountDto = {};
+        Object.keys(dto).forEach((k) => { result[k] = saved[k]; });
+        return result;
+    }
+
+    async remove(email: string): Promise<void> {
+        const affected = (await this.accountsRepository.delete(email)).affected;
+        if (affected === 0) throw new NotFoundException;
     }
 }

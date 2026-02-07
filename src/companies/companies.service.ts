@@ -1,116 +1,100 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Company } from './interfaces/company.interface';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Company } from './entity/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import fs from 'fs';
-import csvParser from 'csv-parser';
 import { employeeRange, getAccumulativeCompanyByYearData, getStats, levelData, levelKeys, revenueRange, yearRange } from './company-data';
 import { DataCard, Doughnut, LineData, Widgets } from './interfaces/widgets.interface';
-import { filterHandler } from './filterHandler';
 import { CreateFilterDto } from './dto/create-filter.dto';
 import { Stats } from './interfaces/stats.interface';
 import { Panel } from './interfaces/panel.interface';
 
 @Injectable()
-export class CompaniesService implements OnModuleInit {
-    private companies: Company[] = [];
-    private stat: Stats;
+export class CompaniesService {
+    constructor(
+        @InjectRepository(Company)
+        private readonly companiesRepository: Repository<Company>,
+    ) { }
 
-    async onModuleInit(): Promise<void> {
-        const data: Company[] = [];
-        // Read csv file
-        const filePath: string = 'test/resources/companies_1217.csv';
-        await new Promise<void>((resolve, reject) => {
-            const numericFields = ['level', 'founded_year', 'annual_revenue', 'employees'];
-            fs.createReadStream(filePath)
-                .pipe(csvParser())
-                .on('data', (row: any) => {
-                    for (const f of numericFields) {
-                        if (row[f] !== undefined) row[f] = Number(row[f]);
-                    }
-                    data.push(row as Company);
-                })
-                .on('end', () => resolve())
-                .on('error', (error: Error) => {
-                    console.error('An error occurred:', error.message);
-                    reject(error);
-                });
-        });
-        this.companies = data;
-        this.stat = getStats(this.companies);
-    }
-
-    findAll(): Company[] {
-        return this.companies;
-    }
-
-    findByFilter(filter: CreateFilterDto): Company[] {
-        const result = this.companies.filter((company) => filterHandler(filter, company));
-        return result;
-    }
-
-    update(id: string, updatedCompany: CreateCompanyDto) {
-        const index = this.companies.findIndex((u) => u.company_code === id);
-        if (index === -1) {
-            const newCompany = { ...updatedCompany } as Company;
-            this.companies.push(newCompany);
-            this.stat = getStats(this.companies);
-            return newCompany;
-        } else {
-            this.companies[index] = updatedCompany as Company;
-            this.stat = getStats(this.companies);
-            return this.companies[index];
+    async findByFilter(filter?: CreateFilterDto): Promise<Company[]> {
+        if (!filter || Object.keys(filter).length === 0) {
+            return this.companiesRepository.find();
         }
-    }
+        const where: any = {};
 
-    delete(id: string) {
-        const index = this.companies.findIndex((u) => u.company_code === id);
-        if (index === -1) return;
-        this.companies.splice(index, 1);
-        this.stat = getStats(this.companies);
-        return true;
-    }
+        if (filter.level?.length) where.level = In(filter.level);
+        if (filter.country?.length) where.country = In(filter.country);
+        if (filter.city?.length) where.city = In(filter.city);
 
-    getWidgets(): Widgets {
-        const doughnut: Doughnut = {
-            levelList: levelKeys(this.stat.level),
-            level: levelData(this.stat.level),
+        const applyRange = (key: keyof Company, range?: { min?: number; max?: number }) => {
+            if (!range) return;
+            if (range.min !== undefined && range.max !== undefined) {
+                where[key] = Between(range.min, range.max);
+            } else if (range.min !== undefined) {
+                where[key] = MoreThanOrEqual(range.min);
+            } else if (range.max !== undefined) {
+                where[key] = LessThanOrEqual(range.max);
+            }
         };
 
-        const line: LineData = getAccumulativeCompanyByYearData(this.stat.companyByYear);
+        applyRange('founded_year', filter.founded_year);
+        applyRange('annual_revenue', filter.annual_revenue);
+        applyRange('employees', filter.employees);
+
+        return this.companiesRepository.find({ where });
+    }
+
+    async update(updatedCompany: CreateCompanyDto): Promise<Company> {
+        const existing = await this.companiesRepository.findOneBy({ company_code: updatedCompany.company_code });
+        if (!existing) {
+            return await this.companiesRepository.save(updatedCompany);
+        }
+        const merged = this.companiesRepository.merge(existing, updatedCompany as Company);
+        return await this.companiesRepository.save(merged);
+    }
+
+    async delete(id: string): Promise<void> {
+        const affected = (await this.companiesRepository.delete({ company_code: id })).affected;
+        if (affected === 0) throw new NotFoundException;
+    }
+
+    async getWidgets(): Promise<Widgets> {
+        const companies = await this.companiesRepository.find();
+        const stat: Stats = getStats(companies);
+
+        const doughnut: Doughnut = {
+            levelList: levelKeys(stat.level),
+            level: levelData(stat.level),
+        };
+
+        const line: LineData = getAccumulativeCompanyByYearData(stat.companyByYear);
 
         const datacard: DataCard = {
-            totalCompany: this.stat.totalCompany,
-            totalEmployee: this.stat.totalEmployee,
-            totalRevenue: this.stat.totalRevenue,
-            totalCountry: this.stat.country.size
+            totalCompany: stat.totalCompany,
+            totalEmployee: stat.totalEmployee,
+            totalRevenue: stat.totalRevenue,
+            totalCountry: stat.country.size
         };
 
         return { datacard, doughnut, line };
     }
 
-    getPanel(): Panel {
+    async getPanel(): Promise<Panel> {
+        const companies = await this.companiesRepository.find();
+        const stat: Stats = getStats(companies);
         return {
-            level: levelKeys(this.stat.level),
-            country: Array.from(this.stat.country.keys()),
-            city: Array.from(this.stat.city.keys()),
-            year: yearRange(this.stat.companyByYear),
-            revenue: revenueRange(this.companies),
-            employee: employeeRange(this.companies),
+            level: levelKeys(stat.level),
+            country: Array.from(stat.country.keys()),
+            city: Array.from(stat.city.keys()),
+            year: yearRange(stat.companyByYear),
+            revenue: revenueRange(companies),
+            employee: employeeRange(companies),
         }
     }
 
-    // Find all rows satify the filter
-    relationFiltered(filter: CreateFilterDto): Company[] {
-        const result: Company[] = [];
-        for (const row of this.companies) {
-            if (filterHandler(filter, row)) {
-                result.push(row);
-            }
-        }
-        return result;
-    }
-
-    getLevel(): number {
-        return this.stat.level.size;
+    async getLevel(): Promise<number> {
+        const companies = await this.companiesRepository.find();
+        const stat: Stats = getStats(companies);
+        return stat.level.size;
     }
 }

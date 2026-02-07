@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Put, Query, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Query, BadRequestException, NotFoundException, Put } from '@nestjs/common';
 import { RelationsService } from './relations.service';
 import { CreateRelationDto } from './dto/create-relation.dto';
 import { TreeNode } from './tree';
-import { ApiTags, ApiOkResponse, ApiBadRequestResponse, ApiNotFoundResponse, ApiQuery, ApiNoContentResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiBadRequestResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('relations')
 @Controller('relations')
@@ -13,7 +13,6 @@ export class RelationsController {
     @ApiQuery({ name: 'filter', required: false, description: 'URL-encoded JSON filter object to restrict companies' })
     @ApiOkResponse({ description: 'Tree of relations for matched companies', type: Object })
     @ApiBadRequestResponse({ description: 'Invalid filter JSON' })
-    @ApiNoContentResponse({ description: 'No relations available for the provided filter' })
     async findRelationTree(@Query('filter') filter?: string): Promise<TreeNode> {
         let filterObj: any = undefined;
         if (filter) {
@@ -24,26 +23,29 @@ export class RelationsController {
             }
         }
         const tree = await this.relationsService.findTreeByFilter(filterObj);
-        if (!tree) throw new NotFoundException();
         return tree;
     }
 
-    @Put(':id')
-    @ApiOkResponse({ description: 'Relation updated successfully' })
+    @Get('/all')
+    @ApiOkResponse({ description: 'All relations', type: CreateRelationDto, isArray: true })
+    async findAll(): Promise<CreateRelationDto[]> {
+        return await this.relationsService.findAll();
+    }
+
+    @Put()
+    @ApiOkResponse({ description: 'Relation created or updated successfully' })
     @ApiBadRequestResponse({ description: 'Invalid relation payload' })
-    async update(@Param('id') id: string, @Body() createRelationDto: CreateRelationDto) {
-        if (!createRelationDto || createRelationDto.parent_company === undefined) throw new BadRequestException();
-        const rel = { ...createRelationDto, company_code: id };
-        await this.relationsService.update(id, rel as any);
-        return { ok: true };
+    async update(@Body() createRelationDto: CreateRelationDto) {
+        if (!createRelationDto) {
+            throw new BadRequestException();
+        }
+        return await this.relationsService.update(createRelationDto);
     }
 
     @Delete(':id')
     @ApiOkResponse({ description: 'Relation deleted' })
     @ApiNotFoundResponse({ description: 'Relation not found' })
     async delete(@Param('id') id: string) {
-        const res = this.relationsService.delete(id as string);
-        if (!res) throw new NotFoundException('Relation not found');
-        return { deleted: true };
+        await this.relationsService.delete(id as string);
     }
 }
