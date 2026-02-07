@@ -24,7 +24,7 @@ export class AccountsController {
     }
 
     @Get(':email')
-    @ApiOkResponse({ description: 'Returns the account with given id', type: CreateAccountDto })
+    @ApiOkResponse({ description: 'Returns the account with given email', type: CreateAccountDto })
     @ApiNotFoundResponse({ description: 'Account not found' })
     findOne(@Param('email') email: string) {
         const account = this.service.findOne(email);

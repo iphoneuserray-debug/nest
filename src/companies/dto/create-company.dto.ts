@@ -2,6 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsInt, IsNumber } from 'class-validator';
 
 export class CreateCompanyDto {
+    @ApiProperty({ example: 'C01' })
+    @IsString()
+    company_code: string;
+
     @ApiProperty({ example: 'Acme Corporation' })
     @IsString()
     company_name: string;
