@@ -1,64 +1,50 @@
 import { Relation } from "./entity/relation.entity";
 
-export type TreeNode = {
+export interface TreeNode {
     id: string;
     parentId: string;
     children: TreeNode[];
 }
 
 export function buildTree(rows: Relation[]): TreeNode {
-    const relation = { id: "", parentId: "", children: [] };
-    const nodes: TreeNode[] = [];
+    const root: TreeNode = { id: "", parentId: "", children: [] };
+    const nodeMap = new Map<string, TreeNode>();
+
     for (const row of rows) {
-        // Search by parent company code
-        const foundPerentNode = find(row.parent_company, relation);
-        const newChild = { id: row.company_code, parentId: row.parent_company, children: [] };
-
-        if (row.parent_company === "") {
-            addChild(newChild, relation);
-        }
-        // Find if exist parent in nodes array
-        else if (foundPerentNode) {
-            addChild(newChild, foundPerentNode);
-        }
-        else {
-            let foundParent = false;
-            for (const node of nodes) {
-                const found = find(row.parent_company, node)
-                if (found) {
-                    addChild(newChild, found);
-                    foundParent = true;
-                }
-
-            }
-            // Assert Children into parent Node
-            if (!foundParent) nodes.push(newChild);
-        }
-
-        // Find all children node
-        for (const child of nodes) {
-            if (child.parentId === row.company_code) {
-                addChild(child, newChild);
-            }
+        if (!nodeMap.has(row.company_code)) {
+            nodeMap.set(row.company_code, { id: row.company_code, parentId: row.parent_company, children: [] });
+        } else {
+            const existing = nodeMap.get(row.company_code)!;
+            existing.parentId = row.parent_company;
         }
     }
-    for (const branch of nodes) {
-        addChild(branch, relation)
+
+    for (const node of nodeMap.values()) {
+        if (!node.parentId) {
+            root.children.push(node);
+            continue;
+        }
+        const parent = nodeMap.get(node.parentId);
+        if (parent) {
+            parent.children.push(node);
+        } else {
+            root.children.push(node);
+        }
     }
-    return relation;
+
+    return root;
 }
 
-function find(id: string, tree: TreeNode): TreeNode | null {
-    if (tree.id === id) {
-        return tree;
-    }
-    for (const child of tree.children) {
-        const result = find(id, child);
-        if (result) return result;
-    }
-    return null;
-}
+export function trimTree(tree: TreeNode, codes: string[]): TreeNode {
+    const codeSet = new Set(codes);
 
-function addChild(child: TreeNode, tree: TreeNode): void {
-    tree.children.push(child);
+    const collect = (node: TreeNode): TreeNode[] => {
+        const collectedChildren = node.children.flatMap((child) => collect(child));
+        if (codeSet.has(node.id)) {
+            return [{ ...node, children: collectedChildren }];
+        }
+        return collectedChildren;
+    };
+
+    return { id: "", parentId: "", children: collect(tree) };
 }

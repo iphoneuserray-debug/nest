@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    app.enableCors();
+    app.enableCors({ origin: true, credentials: true });
+    app.use(cookieParser());
     const config = new DocumentBuilder()
         .setTitle('Example')
         .setDescription('The cats API description')
