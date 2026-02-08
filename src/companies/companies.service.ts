@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { Company } from './entity/company.entity';
@@ -8,17 +8,25 @@ import { DataCard, Doughnut, LineData, Widgets } from './interfaces/widgets.inte
 import { CreateFilterDto } from './dto/create-filter.dto';
 import { Stats } from './interfaces/stats.interface';
 import { Panel } from './interfaces/panel.interface';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 
 @Injectable()
 export class CompaniesService {
     constructor(
         @InjectRepository(Company)
         private readonly companiesRepository: Repository<Company>,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) { }
 
     async findByFilter(filter?: CreateFilterDto): Promise<Company[]> {
         if (!filter || Object.keys(filter).length === 0) {
-            return this.companiesRepository.find();
+            let result: Company[] | undefined = await this.cacheManager.get('companies');
+            if (!result) {
+                result = await this.companiesRepository.find();
+                await this.cacheManager.set('companies', result, 10000);
+            }
+            return result;
         }
         const where: any = {};
 
@@ -46,6 +54,8 @@ export class CompaniesService {
 
     async update(updatedCompany: CreateCompanyDto): Promise<Company> {
         const existing = await this.companiesRepository.findOneBy({ company_code: updatedCompany.company_code });
+        await this.cacheManager.del('companies');
+        await this.cacheManager.del('stat');
         if (!existing) {
             return await this.companiesRepository.save(updatedCompany);
         }
@@ -56,11 +66,16 @@ export class CompaniesService {
     async delete(id: string): Promise<void> {
         const affected = (await this.companiesRepository.delete({ company_code: id })).affected;
         if (affected === 0) throw new NotFoundException;
+        await this.cacheManager.del('companies');
+        await this.cacheManager.del('stat');
     }
 
     async getWidgets(): Promise<Widgets> {
-        const companies = await this.companiesRepository.find();
-        const stat: Stats = getStats(companies);
+        let stat: Stats | undefined = await this.cacheManager.get('stat');
+        if (!stat) {
+            stat = getStats(await this.findByFilter());
+            await this.cacheManager.set('stat', stat, 10000);
+        }
 
         const doughnut: Doughnut = {
             levelList: levelKeys(stat.level),
@@ -80,8 +95,12 @@ export class CompaniesService {
     }
 
     async getPanel(): Promise<Panel> {
-        const companies = await this.companiesRepository.find();
-        const stat: Stats = getStats(companies);
+        const companies = await this.findByFilter();
+        let stat: Stats | undefined = await this.cacheManager.get('stat');
+        if (!stat) {
+            stat = getStats(companies);
+            await this.cacheManager.set('stat', stat, 10000);
+        }
         return {
             level: levelKeys(stat.level),
             country: Array.from(stat.country.keys()),
@@ -93,8 +112,11 @@ export class CompaniesService {
     }
 
     async getLevel(): Promise<number> {
-        const companies = await this.companiesRepository.find();
-        const stat: Stats = getStats(companies);
+        let stat: Stats | undefined = await this.cacheManager.get('stat');
+        if (!stat) {
+            stat = getStats(await this.findByFilter());
+            await this.cacheManager.set('stat', stat, 10000);
+        }
         return stat.level.size;
     }
 }

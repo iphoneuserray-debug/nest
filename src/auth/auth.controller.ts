@@ -11,14 +11,14 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('login')
     signIn(@Body() signInDto: Record<string, string>) {
-        return this.authService.signIn(signInDto.username, signInDto.password);
+        return this.authService.signIn(signInDto.email, signInDto.password);
     }
 
     @Public()
     @HttpCode(HttpStatus.OK)
     @Post('signup')
     signUp(@Body() signUpDto: Record<string, string>) {
-        return this.authService.signUp(signUpDto.username, signUpDto.password);
+        return this.authService.signUp(signUpDto.email, signUpDto.password);
     }
 
     @UseGuards(AuthGuard)

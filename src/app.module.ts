@@ -6,10 +6,7 @@ import { AccountsModule } from './accounts/accounts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entity/user.entity';
 import { SeedModule } from './seed/seed.module';
-import { RedisModule } from './redis/redis.module';
-import { REDIS_CLIENT } from './redis/redis.constants';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
 import { AuthModule } from './auth/auth.module';
 import Keyv from 'keyv';
 import KeyvRedis from '@keyv/redis';
@@ -27,28 +24,22 @@ import KeyvRedis from '@keyv/redis';
             autoLoadEntities: true,
         }),
         CacheModule.registerAsync({
-            // imports: [RedisModule],
-            // inject: [REDIS_CLIENT],
             useFactory: async () => {
-                const redisUrl = process.env.REDIS_URL;
+                const redisUrl = "redis://localhost:6379";
+                if (!redisUrl) {
+                    throw new Error('REDIS_URL is not set. Redis cache is required.');
+                }
                 return {
-                    ttl: 60,
+                    ttl: 6000,
                     max: 5000,
-                    store: redisUrl
-                        ? new Keyv({
-                            store: new KeyvRedis(redisUrl),
-                        })
-                        : new Keyv(),
+                    store: new Keyv({
+                        store: new KeyvRedis(redisUrl),
+                    }),
                 };
             },
+            isGlobal: true,
         }),
         AuthModule,
-    ],
-    providers: [
-        {
-            provide: APP_INTERCEPTOR,
-            useClass: CacheInterceptor,
-        },
     ],
 })
 export class AppModule { }
