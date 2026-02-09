@@ -32,14 +32,14 @@ export function getStats(rows: Company[]): Stats {
     };
 }
 
-// Count values stored in Map
+/** Put value key pair into map */
 function countMap<K>(key: K, map: Map<K, number>): Map<K, number> {
     if (!map.has(key)) map.set(key, 1);
     else map.set(key, (map.get(key)!) + 1);
     return map;
 }
 
-// Fill missing years between min and max
+/** Fill missing years between min and max */
 function addMissingYear(companyByYear: Map<number, number>): { min: number; max: number } {
     if (companyByYear.size === 0) {
         return { min: 0, max: 0 };
@@ -73,7 +73,7 @@ export function getAccumulativeCompanyByYearData(companyByYear: Map<number, numb
     const yearList: string[] = [];
     const companyByYearArr: number[] = [];
     let cumulative = 0;
-
+    // Accumulate company count
     for (const year of years) {
         cumulative += companyByYear.get(year)!;
         yearList.push(year.toString());
@@ -83,10 +83,12 @@ export function getAccumulativeCompanyByYearData(companyByYear: Map<number, numb
     return { yearList, companyByYear: companyByYearArr };
 }
 
+/** Sort level key form Level 1 to Level 4... */
 export function levelKeys(levelMap: Map<number, number>): number[] {
     return Array.from(levelMap.keys()).sort((a, b) => a - b);
 }
 
+/** Get company count of each level */
 export function levelData(levelMap: Map<number, number>): number[] {
     const array = levelKeys(levelMap);
     const data = new Array<number>();
@@ -96,7 +98,11 @@ export function levelData(levelMap: Map<number, number>): number[] {
     return data;
 }
 
-// Find numberic feilds max and min value
+/**
+ * Find min and max values for a numeric field.
+ * @param rows List of companies to scan
+ * @param accessor Function to extract the numeric value
+ */
 function numericRange(rows: Company[], accessor: (c: Company) => number): { min: number; max: number } {
     return rows.reduce(
         (res, row) => {

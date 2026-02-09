@@ -6,6 +6,7 @@ export interface TreeNode {
     children: TreeNode[];
 }
 
+/** Build a parent-child tree from flat relation rows. */
 export function buildTree(rows: Relation[]): TreeNode {
     const root: TreeNode = { id: "", parentId: "", children: [] };
     const nodeMap = new Map<string, TreeNode>();
@@ -35,6 +36,10 @@ export function buildTree(rows: Relation[]): TreeNode {
     return root;
 }
 
+/**
+ * Trim a tree to only include nodes matching the provided codes
+ * and their descendant paths.
+ */
 export function trimTree(tree: TreeNode, codes: string[]): TreeNode {
     const codeSet = new Set(codes);
 

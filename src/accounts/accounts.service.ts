@@ -20,7 +20,8 @@ export class AccountsService {
         const exists = await this.accountsRepository.findOneBy({ email: dto.email });
         if (exists) throw new BadRequestException('Account already exists');
 
-        let user = await this.usersRepository.findOne({ where: { email: dto.email } });
+        let user = await this.usersRepository.findOneBy({ email: dto.email });
+        // If user not existed, create one
         if (!user) {
             user = this.usersRepository.create({
                 id: randomUUID(),
@@ -32,7 +33,7 @@ export class AccountsService {
             } as User);
             user = await this.usersRepository.save(user);
         }
-
+        // Create account
         const account = this.accountsRepository.create({
             email: dto.email,
             password: dto.password,
@@ -60,15 +61,16 @@ export class AccountsService {
     }
 
     async update(email: string, dto: UpdateAccountDto): Promise<UpdateAccountDto> {
+        // Disable updating email
         if (dto.email && dto.email !== email) {
             throw new BadRequestException('Email cannot be updated');
         }
         const account = await this.accountsRepository.findOneBy({ email });
         if (!account) throw new NotFoundException();
-
+        // Merge change into existed user 
         const merged = this.accountsRepository.merge(account, dto as any);
         const saved = await this.accountsRepository.save(merged);
-
+        // Map changed property to result
         const result: UpdateAccountDto = {};
         Object.keys(dto).forEach((k) => { result[k] = saved[k]; });
         return result;

@@ -14,6 +14,7 @@ export class AuthService {
     async signIn(email: string, password: string): Promise<{ access_token: string }> {
         const account = await this.accountsService.findOne(email);
         const user = await this.usersService.findByEmail(email);
+        // Verify password
         if (account?.password !== password) {
             throw new UnauthorizedException();
         }
@@ -24,7 +25,7 @@ export class AuthService {
     }
 
     async signUp(email: string, passward: string): Promise<{ access_token: string }> {
-        const account = await this.accountsService.create({ email: email, password: passward });
+        await this.accountsService.create({ email: email, password: passward });
         const user = await this.usersService.findByEmail(email);
         const payload = { sub: user?.id, email: email, role: user?.role }
         return {

@@ -3,6 +3,7 @@ import { RelationsService } from './relations.service';
 import { CreateRelationDto } from './dto/create-relation.dto';
 import { TreeNode } from './tree';
 import { ApiTags, ApiOkResponse, ApiBadRequestResponse, ApiNotFoundResponse, ApiQuery } from '@nestjs/swagger';
+import { Relation } from './entity/relation.entity';
 
 @ApiTags('relations')
 @Controller('relations')
@@ -28,7 +29,7 @@ export class RelationsController {
 
     @Get('/all')
     @ApiOkResponse({ description: 'All relations', type: CreateRelationDto, isArray: true })
-    async findAll(): Promise<CreateRelationDto[]> {
+    async findAll(): Promise<Relation[]> {
         return await this.relationsService.findAll();
     }
 

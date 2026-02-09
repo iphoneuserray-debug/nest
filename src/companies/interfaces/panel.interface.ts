@@ -1,3 +1,4 @@
+// Filter contoller panel data
 export interface Panel {
     level: number[];
     country: string[];

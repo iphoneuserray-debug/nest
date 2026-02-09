@@ -1,0 +1,3061 @@
+{
+  "info": {
+    "_postman_id": "b7583450-79ac-4f9a-916a-0383241ea0e4",
+    "name": "My Collection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51981641",
+    "_collection_link": "https://go.postman.co/collection/51981641-b7583450-79ac-4f9a-916a-0383241ea0e4?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "Sign up",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Access token is present\", function () {",
+                  "    pm.expect(pm.response.json().access_token).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"TEST123@test.com\",\n    \"password\": \"TEST123!@#\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signup",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign up without password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 500\", function () {",
+                  "    pm.response.to.have.status(500);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"NOPASSWORD@test.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signup",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign in",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Access token is present\", function () {",
+                  "    pm.expect(pm.response.json().access_token).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"lois.griffin@example.com\",\n    \"password\": \"lois123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign in Invalid password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"lois.griffin@example.com\",\n    \"password\": \"WRONGPASSWORD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign in Invalid email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"NONE@test.com\",\n    \"password\": \"WRONGPASSWORD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains the correct email\", function () {",
+                  "    pm.expect(pm.response.json().email).to.eql(\"TEST123@test.com\");",
+                  "});",
+                  "pm.test(\"Response body contains the correct role\", function () {",
+                  "    pm.expect(pm.response.json().role).to.eql(\"User\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZDRlNDBiMC1jZjg5LTQ4YzgtOTUzMS02ZGYyNDk0YzJjYmYiLCJlbWFpbCI6IlRFU1QxMjNAdGVzdC5jb20iLCJyb2xlIjoiVXNlciIsImlhdCI6MTc3MDQ2ODI0M30.-xtU-v0XNlWm1c4s01q6KVu8Sp16G3oPyHRU2r2h9-I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/TEST123@test.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "TEST123@test.com"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "companies",
+      "item": [
+        {
+          "name": "Create company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"company_code matches path id\", () => pm.expect(json.company_code).to.eql(\"TEST123\"));",
+                  "pm.test(\"company_name present\", () => pm.expect(json.company_name).to.eql(\"Test Company A\"));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"company_name\": \"Test Company A\",\n    \"level\": 2,\n    \"country\": \"Wonderland\",\n    \"city\": \"Testville\",\n    \"founded_year\": 2020,\n    \"annual_revenue\": 1000000,\n    \"employees\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modify company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"company_name updated\", () => pm.expect(json.company_name).to.eql(\"Test Company A - Edited\"));",
+                  "pm.test(\"annual_revenue updated\", () => pm.expect(json.annual_revenue).to.eql(1500000));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"company_name\": \"Test Company A - Edited\",\n    \"level\": 2,\n    \"country\": \"Wonderland\",\n    \"city\": \"New City\",\n    \"founded_year\": 2020,\n    \"annual_revenue\": 1500000,\n    \"employees\": 75\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid JSON body",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_name\": \"Bad",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invlaid type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"company_name\": \"Test Company A\",\n    \"level\": 2,\n    \"country\": \"Wonderland\",\n    \"city\": \"Testville\",\n    \"founded_year\": \"2020\",\n    \"annual_revenue\": 1000000,\n    \"employees\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Miss founded year",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "",
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"company_name\": \"Test Company A\",\n    \"level\": 2,\n    \"country\": \"Wonderland\",\n    \"city\": \"Testville\",\n    \"annual_revenue\": 1000000,\n    \"employees\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all companies",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const actualData = pm.response.json();",
+                  "",
+                  "pm.test(\"Result is array\", function () {",
+                  "    pm.expect(Array.isArray(actualData));",
+                  "});",
+                  "",
+                  "pm.test(\"Each item is a legit object\", function () {",
+                  "    actualData.map((item, index) => {",
+                  "        pm.expect(item).to.be.an(\"object\").and.not.be.null;",
+                  "        return item;",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Contains all fields in Company instance\", function () {",
+                  "    const requiredFields = [",
+                  "        \"company_code\",",
+                  "        \"company_name\",",
+                  "        \"level\",",
+                  "        \"country\",",
+                  "        \"city\",",
+                  "        \"founded_year\",",
+                  "        \"annual_revenue\",",
+                  "        \"employees\"",
+                  "    ];",
+                  "    ",
+                  "    actualData.forEach((item, index) => {",
+                  "        pm.expect(item, `${index + 1}`).to.have.all.keys(requiredFields);",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Object type of each field is correct\", function () {",
+                  "    actualData.forEach((item, index) => {",
+                  "        const itemTip = `${index + 1}`;",
+                  "        ",
+                  "        pm.expect(item.company_code, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.company_name, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.country, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.city, itemTip).to.be.a(\"string\");",
+                  "        ",
+                  "        pm.expect(item.level, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.founded_year, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.annual_revenue, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.employees, itemTip).to.be.a(\"number\");",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get companies(undefined filter))",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Catch invalid query\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies?filter=%75%6E%64%65%66%69%6E%65%64",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "%75%6E%64%65%66%69%6E%65%64"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get companies(Selected filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const actualData = pm.response.json();",
+                  "",
+                  "pm.test(\"Result is array\", function () {",
+                  "    pm.expect(Array.isArray(actualData));",
+                  "});",
+                  "",
+                  "pm.test(\"Each item is a legit object\", function () {",
+                  "    actualData.map((item, index) => {",
+                  "        pm.expect(item).to.be.an(\"object\").and.not.be.null;",
+                  "        return item;",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Contains all fields in Company instance\", function () {",
+                  "    const requiredFields = [",
+                  "        \"company_code\",",
+                  "        \"company_name\",",
+                  "        \"level\",",
+                  "        \"country\",",
+                  "        \"city\",",
+                  "        \"founded_year\",",
+                  "        \"annual_revenue\",",
+                  "        \"employees\"",
+                  "    ];",
+                  "    ",
+                  "    actualData.forEach((item, index) => {",
+                  "        pm.expect(item, `${index + 1}`).to.have.all.keys(requiredFields);",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Object type of each field is correct\", function () {",
+                  "    actualData.forEach((item, index) => {",
+                  "        const itemTip = `${index + 1}`;",
+                  "        ",
+                  "        pm.expect(item.company_code, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.company_name, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.country, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.city, itemTip).to.be.a(\"string\");",
+                  "        ",
+                  "        pm.expect(item.level, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.founded_year, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.annual_revenue, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.employees, itemTip).to.be.a(\"number\");",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Have only one row\", function () {",
+                  "    pm.expect(actualData.length).equal(1);",
+                  "});",
+                  "",
+                  "pm.test(\"Same as expected data\", function () {",
+                  "    const expectedData = {",
+                  "        \"company_code\": \"TEST123\",",
+                  "        \"company_name\": \"Test Company A - Edited\",",
+                  "        \"level\": 2,",
+                  "        \"country\": \"Wonderland\",",
+                  "        \"city\": \"New City\",",
+                  "        \"founded_year\": 2020,",
+                  "        \"annual_revenue\": 1500000,",
+                  "        \"employees\": 75",
+                  "    };",
+                  "    pm.expect(actualData[0]).to.deep.equal(expectedData);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies?filter={{filter_wonderland}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "{{filter_wonderland}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get companies(Empty result))",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies?filter=%7B%22level%22%3A%5B%5D%2C%22country%22%3A%5B%5D%2C%22city%22%3A%5B%5D%2C%22founded_year%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%2C%22annual_revenue%22%3A%7B%22min%22%3A-1%2C%22max%22%3A-1%7D%2C%22employees%22%3A%7B%22min%22%3A-1%2C%22max%22%3A-1%7D%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "%7B%22level%22%3A%5B%5D%2C%22country%22%3A%5B%5D%2C%22city%22%3A%5B%5D%2C%22founded_year%22%3A%7B%22min%22%3A1%2C%22max%22%3A1%7D%2C%22annual_revenue%22%3A%7B%22min%22%3A-1%2C%22max%22%3A-1%7D%2C%22employees%22%3A%7B%22min%22%3A-1%2C%22max%22%3A-1%7D%7D"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get companies(null filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const actualData = pm.response.json();",
+                  "",
+                  "pm.test(\"Result is array\", function () {",
+                  "    pm.expect(Array.isArray(actualData));",
+                  "});",
+                  "",
+                  "pm.test(\"Each item is a legit object\", function () {",
+                  "    actualData.map((item, index) => {",
+                  "        pm.expect(item).to.be.an(\"object\").and.not.be.null;",
+                  "        return item;",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Contains all fields in Company instance\", function () {",
+                  "    const requiredFields = [",
+                  "        \"company_code\",",
+                  "        \"company_name\",",
+                  "        \"level\",",
+                  "        \"country\",",
+                  "        \"city\",",
+                  "        \"founded_year\",",
+                  "        \"annual_revenue\",",
+                  "        \"employees\"",
+                  "    ];",
+                  "    ",
+                  "    actualData.forEach((item, index) => {",
+                  "        pm.expect(item, `${index + 1}`).to.have.all.keys(requiredFields);",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Object type of each field is correct\", function () {",
+                  "    actualData.forEach((item, index) => {",
+                  "        const itemTip = `${index + 1}`;",
+                  "        ",
+                  "        pm.expect(item.company_code, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.company_name, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.country, itemTip).to.be.a(\"string\");",
+                  "        pm.expect(item.city, itemTip).to.be.a(\"string\");",
+                  "        ",
+                  "        pm.expect(item.level, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.founded_year, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.annual_revenue, itemTip).to.be.a(\"number\");",
+                  "        pm.expect(item.employees, itemTip).to.be.a(\"number\");",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies?filter=null",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "null"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get widgets",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Has datacard object\", () => pm.expect(json).to.have.property('datacard').that.is.an('object'));",
+                  "pm.test(\"Has doughnut object\", () => pm.expect(json).to.have.property('doughnut').that.is.an('object'));",
+                  "pm.test(\"Has line object\", () => pm.expect(json).to.have.property('line').that.is.an('object'));",
+                  "",
+                  "// Test for datacard properties",
+                  "pm.test(\"Total Company is 2001\", () => pm.expect(json.datacard.totalCompany).to.equal(2001));",
+                  "pm.test(\"Total Employee is 699194\", () => pm.expect(json.datacard.totalEmployee).to.equal(699194));",
+                  "pm.test(\"Total Revenue is 184279175\", () => pm.expect(json.datacard.totalRevenue).to.equal(184279175));",
+                  "pm.test(\"Total Country is 9\", () => pm.expect(json.datacard.totalCountry).to.equal(9));",
+                  "",
+                  "// Test for doughnut",
+                  "pm.test(\"LevelList has 4 items\", () => pm.expect(json.doughnut.levelList).to.have.lengthOf(4));",
+                  "pm.test(\"Level has 4 items\", () => pm.expect(json.doughnut.level).to.have.lengthOf(4));",
+                  "pm.test(\"Level 1 is 1\", () => pm.expect(json.doughnut.level[0]).to.equal(1));",
+                  "pm.test(\"Level 1 number is 51\", () => pm.expect(json.doughnut.level[1]).to.equal(51));",
+                  "",
+                  "// Test for line object yearList and companyByYear arrays length and values",
+                  "pm.test(\"Year List has 2 items\", () => pm.expect(json.line.yearList).to.have.lengthOf(124));",
+                  "pm.test(\"Company by Year has 2 items\", () => pm.expect(json.line.companyByYear).to.have.lengthOf(124));",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/widgets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies",
+                "widgets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get panel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Has level array\", () => pm.expect(json).to.have.property('level').that.is.an('array'));",
+                  "pm.test(\"Has country array\", () => pm.expect(json).to.have.property('country').that.is.an('array'));",
+                  "pm.test(\"Has city array\", () => pm.expect(json).to.have.property('city').that.is.an('array'));",
+                  "pm.test(\"Has year/range object\", () => pm.expect(json).to.have.property('year'));",
+                  "pm.test(\"Has revenue range\", () => pm.expect(json).to.have.property('revenue'));",
+                  "pm.test(\"Has employee range\", () => pm.expect(json).to.have.property('employee'));",
+                  "pm.test(\"Country array has 9 elements\", () => pm.expect(json.country).to.have.lengthOf(9));",
+                  "pm.test(\"City array has 81 elements\", () => pm.expect(json.city).to.have.lengthOf(81));",
+                  "pm.test(\"Year min is 1900\", () => pm.expect(json.year.min).to.equal(1900));",
+                  "pm.test(\"Year max is 2023\", () => pm.expect(json.year.max).to.equal(2023));",
+                  "pm.test(\"Revenue min is 15145\", () => pm.expect(json.revenue.min).to.equal(15145));",
+                  "pm.test(\"Revenue max is 1500000\", () => pm.expect(json.revenue.max).to.equal(1500000));",
+                  "pm.test(\"Employee min is 5\", () => pm.expect(json.employee.min).to.equal(5));",
+                  "pm.test(\"Employee max is 4877\", () => pm.expect(json.employee.max).to.equal(4877));",
+                  "pm.test(\"Level array has 4 elements\", () => pm.expect(json.level.length).to.equal(4));",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/panel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies",
+                "panel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get level",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Response is a number\", () => pm.expect(body).to.be.a('number'));",
+                  "pm.test(\"Level is four\", () => pm.expect(body).to.be.at.equal(4));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/level",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies",
+                "level"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete existed item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"DELETE existing - status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/{{test_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "companies",
+                "{{test_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete not found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"DELETE not found - status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/companies/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "companies",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "INVALID_ID"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete multiple time",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"DELETE not found - status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/companies/{{test_id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3001",
+              "path": [
+                "companies",
+                "{{test_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "relations",
+      "item": [
+        {
+          "name": "Create relation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Company code is TEST123\", () => pm.expect(pm.response.json().company_code).to.eql(\"TEST123\"));",
+                  "pm.test(\"Parent company is empty\", () => pm.expect(pm.response.json().parent_company).to.eql(\"\"));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"parent_company\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/relations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update relation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Company code is TEST123\", () => pm.expect(pm.response.json().company_code).to.eql(\"TEST123\"));",
+                  "pm.test(\"Parent company is C0\", () => pm.expect(pm.response.json().parent_company).to.eql(\"C0\"));",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"parent_company\": \"C0\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/relations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create relation(Miss parent)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/relations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create relation(Invalid type)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": 123,\n    \"parent_company\": 234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/relations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all relations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body is not empty\", function () {",
+                  "    pm.expect(pm.response.text()).to.not.be.empty;",
+                  "});",
+                  "pm.test(\"Response body contains 'C001'\", function () {",
+                  "    pm.expect(pm.response.text()).to.include('C001');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/relations/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get relation(valid filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Have only one relation\", () => pm.expect(json.children.length).to.equal(1));",
+                  "pm.test(\"Have only one relation\", () => pm.expect(json.children[0].children.length).to.equal(0));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/relations?filter=%7B%0A%20%20%22level%22%3A%20%5B%221%22%5D%0A%7D",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "%7B%0A%20%20%22level%22%3A%20%5B%221%22%5D%0A%7D"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get relation(without filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Have only 50 relation\", () => pm.expect(json.children[0].children.length).to.equal(51));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/relations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get relation(Undefined filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Catch invalid query\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/relations?filter=%75%6E%64%65%66%69%6E%65%64",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "%75%6E%64%65%66%69%6E%65%64"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get relations(null filter)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Have only 50 relation\", () => pm.expect(json.children[0].children.length).to.equal(51));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/relations?filter=null",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations"
+              ],
+              "query": [
+                {
+                  "key": "filter",
+                  "value": "null"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete relation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/relations/{{test_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations",
+                "{{test_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete relation(Second Time))",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/relations/{{test_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations",
+                "{{test_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete relation(Not existed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_code\": \"TEST123\",\n    \"parent_company\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/relations/BAD_ID",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "relations",
+                "BAD_ID"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "Create user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"id is USR123\", () => pm.expect(pm.response.json()).to.have.property('id', 'USR123'));",
+                  "pm.test(\"name is Test User\", () => pm.expect(pm.response.json()).to.have.property('name', 'Test User'));",
+                  "pm.test(\"age is 30\", () => pm.expect(pm.response.json()).to.have.property('age', 30));",
+                  "pm.test(\"email is test@example.com\", () => pm.expect(pm.response.json()).to.have.property('email', 'test@example.com'));",
+                  "pm.test(\"role is User\", () => pm.expect(pm.response.json()).to.have.property('role', 'User'));",
+                  "pm.test(\"status is Active\", () => pm.expect(pm.response.json()).to.have.property('status', 'Online'));",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"USR123\",\n    \"name\": \"Test User\",\n    \"age\": 30,\n    \"email\": \"test@example.com\",\n    \"role\": \"User\",\n    \"status\": \"Online\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"User ID is correct\", () => pm.expect(pm.response.json().id).to.eql(\"USR123\"));",
+                  "pm.test(\"User name is updated\", () => pm.expect(pm.response.json().name).to.eql(\"Test User Edited\"));",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"USR123\",\n    \"name\": \"Test User Edited\",\n    \"age\": 31,\n    \"email\": \"test@example.com\",\n    \"role\": \"User\",\n    \"status\": \"Online\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"USR123\",\n    \"name\": \"Test User Edited\",\n    \"age\": 31,\n    \"email\": \"new@example.com\",\n    \"role\": \"User\",\n    \"status\": \"Online\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User(Invalid Role)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"USR123\",\n    \"name\": \"Test User\",\n    \"age\": 30,\n    \"email\": \"test@example.com\",\n    \"role\": \"None\",\n    \"status\": \"Online\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User(Miss Email)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"USR123\",\n    \"name\": \"Test User\",\n    \"age\": 30,\n    \"email\": \"test@example.com\",\n    \"status\": \"Online\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"User ID is correct\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(\"USR123\");",
+                  "});",
+                  "pm.test(\"User name is updated\", function () {",
+                  "    pm.expect(pm.response.json().name).to.eql(\"new-name\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"new-name\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/test@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "test@example.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"new-email@email.com\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/test@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "test@example.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 500\", function () {",
+                  "    pm.response.to.have.status(500);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"new-id\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/test@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "test@example.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update with invalid email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"new-name\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/none@example.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "none@example.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find all users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains 'USR123'\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"USR123\");",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/USR123",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "USR123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete(Second Time)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/USR123",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "USR123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete(Not Existed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/NONE",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "NONE"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "accounts",
+      "item": [
+        {
+          "name": "Create account(imperative info)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains correct data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.not.be.null;",
+                  "    pm.expect(jsonData.email).to.equal(\"test@email.com\");",
+                  "    pm.expect(jsonData.password).to.equal(\"test12345\");",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"test12345\",\n    \"email\": \"test@email.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create account(existed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"test12345\",\n    \"email\": \"test@email.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create account(full info)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains correct data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.email).to.equal(\"JohnDoe@email.com\");",
+                  "    pm.expect(jsonData.password).to.equal(\"JohnDoe12345\");",
+                  "    pm.expect(jsonData.phone).to.equal(\"1234567890\");",
+                  "    pm.expect(jsonData.address).to.equal(\"123 Main St\");",
+                  "    pm.expect(jsonData.country).to.equal(\"USA\");",
+                  "    pm.expect(jsonData.state).to.equal(\"CA\");",
+                  "    pm.expect(jsonData.city).to.equal(\"Los Angeles\");",
+                  "    pm.expect(jsonData.postcode).to.equal(\"90001\");",
+                  "    pm.expect(jsonData.about).to.equal(\"Test user for API testing\");",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"JohnDoe12345\",\n    \"email\": \"JohnDoe@email.com\",\n    \"phone\": \"1234567890\",\n    \"address\": \"123 Main St\",\n    \"country\": \"USA\",\n    \"state\": \"CA\",\n    \"city\": \"Los Angeles\",\n    \"postcode\": \"90001\",\n    \"about\": \"Test user for API testing\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create account(Miss password)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@email.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create account(Invalid JSON)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all accounts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains two accounts\", function () {",
+                  "    pm.expect(pm.response.json().length).to.equal(5);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get account by email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains the correct email\", function () {",
+                  "    pm.expect(pm.response.json().email).to.eql(\"test@email.com\");",
+                  "});",
+                  "pm.test(\"Response body contains the correct password\", function () {",
+                  "    pm.expect(pm.response.json().password).to.eql(\"test12345\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/test@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "test@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get account by invalid email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/none@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "none@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update account password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"password\": \"testnew12345\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/test@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "test@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update account city",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "pm.test(\"Response body contains the correct name\", function () {",
+                  "    pm.expect(pm.response.json().city).to.eql(\"New York\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"city\": \"New York\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/JohnDoe@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "JohnDoe@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update account id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"newid\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/test@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "test@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update account email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"newName@email.com\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/test@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "test@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update invalid account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"password\": \"newPassword\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/none@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "none@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/test@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "test@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account full info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/JohnDoe@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "JohnDoe@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account(Second Time)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/test@email.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "test@email.com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account(Invalid email)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/accounts/none",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "none"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzZWVkLTIiLCJlbWFpbCI6ImxvaXMuZ3JpZmZpbkBleGFtcGxlLmNvbSIsInJvbGUiOiJNYW5hZ2VyIiwiaWF0IjoxNzcwNDcwMzEwfQ.xDlDToyh1UPHbx3OdM4-jkqh-4N_beApjyUQfLGjmgs",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

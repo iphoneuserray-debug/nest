@@ -22,12 +22,17 @@ export class RelationsService {
         return this.relationsRepository.find();
     }
 
+    /**
+     * Get the full relation tree (cached) and optionally trim it by company filter.
+     */
     async findTreeByFilter(filter?: CreateFilterDto): Promise<TreeNode> {
+        // Store complete relation tree into cache
         let cached: TreeNode | undefined = await this.cacheManager.get('tree');
         if (!cached) {
             cached = buildTree(await this.findAll());
             await this.cacheManager.set('tree', cached, 100000);
         }
+        // Trim branches by filter
         if (filter) {
             const filtered = await this.companiesService.findByFilter(filter);
             const codes = filtered.map((c) => c.company_code);
@@ -39,10 +44,12 @@ export class RelationsService {
     async update(payload: CreateRelationDto): Promise<Relation> {
         const existing = await this.relationsRepository.findOneBy({ company_code: payload.company_code });
         await this.cacheManager.del('tree');
+        // Add relation when not existing
         if (!existing) {
             const created = this.relationsRepository.create(payload as Relation);
             return this.relationsRepository.save(created);
         }
+        // Merge relation when existing
         const merged = this.relationsRepository.merge(existing, payload as Relation);
         return this.relationsRepository.save(merged);
     }

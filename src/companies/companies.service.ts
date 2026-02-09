@@ -20,16 +20,18 @@ export class CompaniesService {
     ) { }
 
     async findByFilter(filter?: CreateFilterDto): Promise<Company[]> {
+        // Check cache
         if (!filter || Object.keys(filter).length === 0) {
             let result: Company[] | undefined = await this.cacheManager.get('companies');
             if (!result) {
+                // Store companies into cache
                 result = await this.companiesRepository.find();
                 await this.cacheManager.set('companies', result, 10000);
             }
             return result;
         }
         const where: any = {};
-
+        // Set where filter
         if (filter.level?.length) where.level = In(filter.level);
         if (filter.country?.length) where.country = In(filter.country);
         if (filter.city?.length) where.city = In(filter.city);
@@ -54,11 +56,14 @@ export class CompaniesService {
 
     async update(updatedCompany: CreateCompanyDto): Promise<Company> {
         const existing = await this.companiesRepository.findOneBy({ company_code: updatedCompany.company_code });
+        // Reset cache when data updated
         await this.cacheManager.del('companies');
         await this.cacheManager.del('stat');
+        // Add new company when not exisiting
         if (!existing) {
             return await this.companiesRepository.save(updatedCompany);
         }
+        // Merge company data when exist
         const merged = this.companiesRepository.merge(existing, updatedCompany as Company);
         return await this.companiesRepository.save(merged);
     }
@@ -66,11 +71,13 @@ export class CompaniesService {
     async delete(id: string): Promise<void> {
         const affected = (await this.companiesRepository.delete({ company_code: id })).affected;
         if (affected === 0) throw new NotFoundException;
+        // Clear cache when delete data
         await this.cacheManager.del('companies');
         await this.cacheManager.del('stat');
     }
 
     async getWidgets(): Promise<Widgets> {
+        // Check or set stats cache
         let stat: Stats | undefined = await this.cacheManager.get('stat');
         if (!stat) {
             stat = getStats(await this.findByFilter());
@@ -95,6 +102,7 @@ export class CompaniesService {
     }
 
     async getPanel(): Promise<Panel> {
+        // Check or set stats cache
         const companies = await this.findByFilter();
         let stat: Stats | undefined = await this.cacheManager.get('stat');
         if (!stat) {
@@ -112,6 +120,7 @@ export class CompaniesService {
     }
 
     async getLevel(): Promise<number> {
+        // Check or set stats cache
         let stat: Stats | undefined = await this.cacheManager.get('stat');
         if (!stat) {
             stat = getStats(await this.findByFilter());

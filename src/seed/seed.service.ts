@@ -22,6 +22,7 @@ export class SeedService implements OnModuleInit {
         private readonly relationsRepository: Repository<Relation>,
     ) { }
 
+    /** Seed demo users/accounts and company data when module starts. */
     async onModuleInit(): Promise<void> {
         await this.seedCompaniesAndRelations();
         const seedData = [
@@ -36,7 +37,7 @@ export class SeedService implements OnModuleInit {
                 },
                 account: {
                     email: 'peter.griffin@example.com',
-                    password: 'peter123',
+                    password: 'peter1234',
                     phone: '555-0101',
                     address: '31 Spooner Street',
                     country: 'USA',
@@ -57,7 +58,7 @@ export class SeedService implements OnModuleInit {
                 },
                 account: {
                     email: 'lois.griffin@example.com',
-                    password: 'lois123',
+                    password: 'lois1234',
                     phone: '555-0102',
                     address: '31 Spooner Street',
                     country: 'USA',
@@ -78,7 +79,7 @@ export class SeedService implements OnModuleInit {
                 },
                 account: {
                     email: 'stewie.griffin@example.com',
-                    password: 'stewie123',
+                    password: 'stewie1234',
                     phone: '555-0103',
                     address: '31 Spooner Street',
                     country: 'USA',
@@ -123,6 +124,7 @@ export class SeedService implements OnModuleInit {
         }
     }
 
+    /** Seed companies and relations from CSV resources if present. */
     private async seedCompaniesAndRelations(): Promise<void> {
         const companiesFilePath = path.resolve('test/resources/companies_1217.csv');
         const relationsFilePath = path.resolve('test/resources/relationships_1217.csv');
@@ -151,6 +153,7 @@ export class SeedService implements OnModuleInit {
         }
     }
 
+    /** Parse a CSV file into typed records using a row mapper. */
     private async parseCsv<T>(filePath: string, mapper: (row: any) => T): Promise<T[]> {
         const records: T[] = [];
         await new Promise<void>((resolve, reject) => {

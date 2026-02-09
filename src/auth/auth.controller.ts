@@ -16,6 +16,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ) {
         const result = await this.authService.signIn(signInDto.email, signInDto.password);
+        // Set token
         res.cookie('access_token', result.access_token, {
             httpOnly: true,
             sameSite: 'lax',
@@ -32,6 +33,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ) {
         const result = await this.authService.signUp(signUpDto.email, signUpDto.password);
+        // Set token
         res.cookie('access_token', result.access_token, {
             httpOnly: true,
             sameSite: 'lax',

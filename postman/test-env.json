@@ -1,0 +1,40 @@
+{
+	"id": "f4f87304-43c0-4cc6-8907-c52d320f77c5",
+	"name": "New Environment",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "filter_wonderland",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "relFilter",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "filter",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-02-09T07:53:27.484Z",
+	"_postman_exported_using": "Postman/11.83.6"
+}

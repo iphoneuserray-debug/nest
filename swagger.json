@@ -23,21 +23,10 @@
                 "tags": [
                     "users"
                 ]
-            }
-        },
-        "/users/{id}": {
+            },
             "put": {
                 "operationId": "UsersController_update",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
+                "parameters": [],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -59,7 +48,78 @@
                 "tags": [
                     "users"
                 ]
-            },
+            }
+        },
+        "/users/by-email/{email}": {
+            "get": {
+                "operationId": "UsersController_findByEmail",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the user with given email",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateUserDto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            }
+        },
+        "/users/{email}": {
+            "patch": {
+                "operationId": "UsersController_updateByEmail",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "tags": [
+                    "users"
+                ]
+            }
+        },
+        "/users/{id}": {
             "delete": {
                 "operationId": "UsersController_delete",
                 "parameters": [
@@ -74,7 +134,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User deleted (false if not found)"
+                        "description": "User deleted"
                     },
                     "404": {
                         "description": "User not found"
@@ -126,21 +186,10 @@
                 "tags": [
                     "companies"
                 ]
-            }
-        },
-        "/companies/{id}": {
+            },
             "put": {
                 "operationId": "CompaniesController_update",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
+                "parameters": [],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -169,7 +218,9 @@
                 "tags": [
                     "companies"
                 ]
-            },
+            }
+        },
+        "/companies/{id}": {
             "delete": {
                 "operationId": "CompaniesController_delete",
                 "parameters": [
@@ -283,9 +334,6 @@
                             }
                         }
                     },
-                    "204": {
-                        "description": "No relations available for the provided filter"
-                    },
                     "400": {
                         "description": "Invalid filter JSON"
                     }
@@ -293,21 +341,10 @@
                 "tags": [
                     "relations"
                 ]
-            }
-        },
-        "/relations/{id}": {
+            },
             "put": {
                 "operationId": "RelationsController_update",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
+                "parameters": [],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -320,7 +357,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Relation updated successfully"
+                        "description": "Relation created or updated successfully"
                     },
                     "400": {
                         "description": "Invalid relation payload"
@@ -329,7 +366,33 @@
                 "tags": [
                     "relations"
                 ]
-            },
+            }
+        },
+        "/relations/all": {
+            "get": {
+                "operationId": "RelationsController_findAll",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "All relations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CreateRelationDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "relations"
+                ]
+            }
+        },
+        "/relations/{id}": {
             "delete": {
                 "operationId": "RelationsController_delete",
                 "parameters": [
@@ -419,7 +482,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns the account with given id",
+                        "description": "Returns the account with given email",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -504,6 +567,48 @@
                     "accounts"
                 ]
             }
+        },
+        "/auth/login": {
+            "post": {
+                "operationId": "AuthController_signIn",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "Auth"
+                ]
+            }
+        },
+        "/auth/signup": {
+            "post": {
+                "operationId": "AuthController_signUp",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "Auth"
+                ]
+            }
+        },
+        "/auth/profile": {
+            "get": {
+                "operationId": "AuthController_getProfile",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                },
+                "tags": [
+                    "Auth"
+                ]
+            }
         }
     },
     "info": {
@@ -543,7 +648,12 @@
                         ]
                     },
                     "status": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "status type",
+                        "enum": [
+                            "Online",
+                            "Offline"
+                        ]
                     }
                 },
                 "required": [
@@ -555,9 +665,49 @@
                     "status"
                 ]
             },
+            "UpdateUserDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "role type",
+                        "enum": [
+                            "Admin",
+                            "Manager",
+                            "User"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "status type",
+                        "enum": [
+                            "Online",
+                            "Offline"
+                        ]
+                    }
+                }
+            },
             "CreateCompanyDto": {
                 "type": "object",
                 "properties": {
+                    "company_code": {
+                        "type": "string",
+                        "example": "C01"
+                    },
                     "company_name": {
                         "type": "string",
                         "example": "Acme Corporation"
@@ -589,6 +739,7 @@
                     }
                 },
                 "required": [
+                    "company_code",
                     "company_name",
                     "level",
                     "country",
@@ -618,10 +769,6 @@
             "CreateAccountDto": {
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Alice"
-                    },
                     "email": {
                         "type": "string",
                         "format": "email",
@@ -653,15 +800,6 @@
                     },
                     "about": {
                         "type": "string"
-                    },
-                    "role": {
-                        "type": "string",
-                        "enum": [
-                            "Admin",
-                            "Manager",
-                            "User"
-                        ],
-                        "example": "User"
                     }
                 },
                 "required": [
@@ -672,10 +810,6 @@
             "UpdateAccountDto": {
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "type": "string",
-                        "example": "Alice"
-                    },
                     "email": {
                         "type": "string",
                         "format": "email",
@@ -707,15 +841,6 @@
                     },
                     "about": {
                         "type": "string"
-                    },
-                    "role": {
-                        "type": "string",
-                        "enum": [
-                            "Admin",
-                            "Manager",
-                            "User"
-                        ],
-                        "example": "User"
                     }
                 }
             }

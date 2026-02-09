@@ -19,6 +19,7 @@ export class CompaniesController {
     @ApiInternalServerErrorResponse({ description: 'Unexpected error' })
     async findByFilter(@Query('filter') filter?: string): Promise<Company[]> {
         let filterObj: any = undefined;
+        // Encode filter
         if (filter) {
             try {
                 filterObj = JSON.parse(decodeURIComponent(filter));

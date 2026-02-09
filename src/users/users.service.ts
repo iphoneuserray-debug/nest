@@ -16,6 +16,7 @@ export class UsersService {
     ) { }
 
     async findAll(): Promise<User[]> {
+        // Store users into cache
         let result: User[] | undefined = await this.cacheManager.get('users');
         if (!result) {
             result = await this.usersRepository.find();
@@ -30,20 +31,24 @@ export class UsersService {
 
     async update(createUser: CreateUserDto): Promise<User> {
         const existing = await this.usersRepository.findOneBy({ id: createUser.id });
+        // Disable updating email
         if (existing && existing.email !== createUser.email) {
             throw new BadRequestException('Email cannot be updated');
         }
         await this.cacheManager.del('users');
+        // Create or update user
         return await this.usersRepository.save(createUser as User);
     }
 
     async updateByEmail(email: string, updateUserDto: UpdateUserDto): Promise<UpdateUserDto> {
+        // Disable updating email
         if (updateUserDto.email && updateUserDto.email !== email) {
             throw new BadRequestException('Email cannot be updated');
         }
         await this.cacheManager.del('users');
         const user = await this.usersRepository.findOneBy({ email: email });
         if (!user) throw new NotFoundException;
+        // Update user
         const merged = this.usersRepository.merge(user, updateUserDto);
         return await this.usersRepository.save(merged);
     }
